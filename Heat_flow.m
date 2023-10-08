@@ -87,7 +87,7 @@ clear all
 L = 50e3;%m
 TL = 500;%C
 u = [-1e4 -1e3 -1e2 -1e1 -1 1 1e1 1e2 1e3 1e4]'/((1e+6)*360*24*60*60)';%m/s
-z = linspace(0,10e3);
+z = linspace(0,50e3,1000);
 s=1.5e-6;%m2s-1, I will use this value from 1.
 T=(TL*(1-exp(-u*z/s))./(1-exp(-u*L/s)))';
 plot(T,z)
@@ -97,10 +97,33 @@ ylabel('Depth(m)')
 xlabel('Temperature(C^\circ)')
 %b)
 ThCond = 2.5;
-Tb = T(:,6);
-grad = diff(Tb)./diff(z');
+N=10;
+for  n=1:length(z)/N    
+    HF(n,:)= ThCond*(T(N*n,:)-T(N*n-N+1,:))/N;
+end
+z1=linspace(0,10e3,100);
+figure(4)
+hold on
+plot(HF,z1)
+set(gca, 'YDir','reverse')
+ylabel('Depth(m)')
+xlabel('Heat flow (W m^{-2})')
+% set(gca, 'XScale', 'log')
+hold off
 
-
+%% c)
+clear all
+uc = [-8 8]'/((1e+6)*360*24*60*60)';%m/s
+L = 50e3;%m
+TL = 500;%C
+z = linspace(0,50e3,1000);
+s=1.5e-6;%m2s-1, I will use this value from 1.
+T=(TL*(1-exp(-uc*z/s))./(1-exp(-uc*L/s)))';
+plot(T,z)
+set(gca, 'YDir','reverse')
+% set(gca, 'XScale', 'log')
+ylabel('Depth(m)')
+xlabel('Temperature(C^\circ)')
 
 
 
